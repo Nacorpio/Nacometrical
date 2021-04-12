@@ -30,7 +30,7 @@
     }
   }
 
-  public partial class VehicleDefinition : BaseDefinition
+  public partial class VehicleDefinition : DefinitionBase
   {
     public VehicleDefinition ( string name ) : base ( name )
     { }

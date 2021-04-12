@@ -1,10 +1,10 @@
 ﻿namespace Nacometrical
 {
-  public abstract class BaseDefinition : IDefinition
+  public abstract class DefinitionBase : IDefinition
   {
     protected readonly PropertyBag _properties = new ( );
 
-    protected BaseDefinition ( string name )
+    protected DefinitionBase ( string name )
     {
       Name = name;
     }

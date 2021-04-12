@@ -4,7 +4,7 @@
   {
     public static Entity Null => new ( );
 
-    private BaseDefinition _definition;
+    private DefinitionBase _definition;
 
     public Entity ( ulong id )
     {
@@ -21,7 +21,7 @@
 
     public IDefinition GetDefinition ( ) => _definition;
 
-    public void SetDefinition ( BaseDefinition definition )
+    public void SetDefinition ( DefinitionBase definition )
     {
       _definition = definition;
       Initialize ( );

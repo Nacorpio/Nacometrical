@@ -1,17 +1,16 @@
 ﻿namespace Nacometrical
 {
-  public abstract class BuilderBase <T> : IBuilder <T>
+  public abstract class BuilderBase <TOut> : IBuilder <TOut>
   {
-    public abstract T Build ( );
-
+    public abstract TOut Build ( );
     public virtual object Build ( object @in ) => Build ( );
 
     object IBuilder.Build ( ) => Build ( );
   }
 
-  public abstract class BuilderBase <T, In> : IBuilder <T, In>
+  public abstract class BuilderBase <TOut , In> : IBuilder <TOut , In>
   {
-    public abstract T Build ( In id );
+    public abstract TOut Build ( In id );
 
     public virtual object Build ( )
     {

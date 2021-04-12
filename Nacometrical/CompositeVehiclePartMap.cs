@@ -31,7 +31,12 @@ namespace Nacometrical
     public void AddPart <TPart> ( TPart part )
       where TPart : IVehiclePart
     {
+      if ( !_maps.TryGetValue ( typeof ( TPart ).GetHashCode ( ) , out var map ) )
+      {
+        return;
+      }
 
+      
     }
   }
 }
