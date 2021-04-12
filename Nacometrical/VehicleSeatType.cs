@@ -2,9 +2,9 @@
 {
   public enum VehicleSeatType
   {
-    Undefined,
-    Driver,
-    Passenger,
+    Undefined ,
+    Driver ,
+    Passenger ,
     Other
   }
 }

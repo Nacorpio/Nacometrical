@@ -3,7 +3,7 @@
   public abstract class DynamicBuilderBase <This , TOut> : BuilderBase <TOut> , IDynamicBuilder <TOut>
     where This : DynamicBuilderBase <This , TOut>
   {
-    private readonly PropertyBag _properties = new ( );
+    protected readonly PropertyBag _properties = new ( );
 
     public IImmutablePropertyBag Properties => _properties;
 
@@ -12,12 +12,14 @@
       _properties.SetValue ( propertyName , value );
       return (This) this;
     }
+
+    public abstract override TOut Build ();
   }
 
   public abstract class DynamicBuilderBase <This , TOut , TIn> : BuilderBase <TOut , TIn> , IDynamicBuilder <TOut , TIn>
     where This : DynamicBuilderBase <This , TOut , TIn>
   {
-    private readonly PropertyBag _properties = new ( );
+    protected readonly PropertyBag _properties = new ( );
 
     public IImmutablePropertyBag Properties => _properties;
 
@@ -26,5 +28,7 @@
       _properties.SetValue ( propertyName , value );
       return (This) this;
     }
+
+    public abstract override TOut Build ( TIn id );
   }
 }

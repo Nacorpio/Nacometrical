@@ -2,36 +2,36 @@
 
 namespace Nacometrical
 {
-  public class VehiclePartBuilder<T, TPart> : BuilderBase<TPart, byte>
-    where T : VehiclePartBuilder <T, TPart>
-    where TPart : VehiclePart
+  public class VehiclePartBuilder<This, TOut> : BuilderBase<TOut, byte>
+    where This : VehiclePartBuilder <This, TOut>
+    where TOut : VehiclePart
   {
     public string CommonName { get; private set; }
     public string[] Aliases { get; private set; }
 
     public bool IsBroken { get; private set; }
 
-    public T WithCommonName ( string value )
+    public This WithCommonName ( string value )
     {
       CommonName = value;
-      return (T) this;
+      return (This) this;
     }
 
-    public T WithAliases ( params string[] values )
+    public This WithAliases ( params string[] values )
     {
       Aliases = values;
-      return (T) this;
+      return (This) this;
     }
 
-    public T SetBroken ( bool value )
+    public This SetBroken ( bool value )
     {
       IsBroken = value;
-      return (T) this;
+      return (This) this;
     }
 
-    public override TPart Build ( byte id )
+    public override TOut Build ( byte id )
     {
-      var part = Activator.CreateInstance (typeof(TPart), id) as TPart;
+      var part = Activator.CreateInstance (typeof(TOut), id) as TOut;
 
       if ( IsBroken )
       {
