@@ -3,71 +3,81 @@ using System.Linq;
 
 namespace Nacometrical
 {
-  public class VehicleSeatMap
+  public class VehicleSeatMap : VehiclePartMap <VehicleSeat , VehicleSeatBuilder>
   {
-    private readonly List <VehicleSeat> _seats = new ( byte.MaxValue );
+    public VehicleSeat CreateDriverSeat ( ) =>
+      Create
+      (
+        ( _ , x ) => x
+         .WithType ( VehicleSeatType.Driver )
+      );
 
-    public byte CreateSeat ( VehicleSeatType type )
+    public VehicleSeat CreatePassengerSeat ( ) =>
+      Create
+      (
+        ( _ , x ) => x
+         .WithType ( VehicleSeatType.Passenger )
+      );
+
+
+    public VehicleSeat GetOccupiedSeat ( Creature occupant ) =>
+      GetOccupiedSeats ( )
+       .FirstOrDefault ( x => x.GetOccupant ( ).Equals ( occupant ) );
+
+
+    public VehicleSeat GetFreeSeat ( ) =>
+      GetFreeSeats ( ).FirstOrDefault ( );
+
+    public VehicleSeat GetFreeSeat ( VehicleSeatType type ) =>
+      GetFreeSeats ( ).FirstOrDefault ( x => x.Type == type );
+
+
+    public IEnumerable <VehicleSeat> GetFreeSeats ( VehicleSeatType type ) =>
+      GetFreeSeats ( )
+       .Where ( x => x.Type == type );
+
+    public IEnumerable <VehicleSeat> GetOccupiedSeats ( VehicleSeatType type ) =>
+      GetOccupiedSeats ( )
+       .Where ( x => x.Type == type );
+
+
+    public IEnumerable <VehicleSeat> GetFreeSeats ( ) =>
+      Entries.Where ( x => x.IsFree );
+
+    public IEnumerable <VehicleSeat> GetOccupiedSeats ( ) =>
+      Entries.Where ( x => x.IsOccupied );
+
+
+    public IEnumerable <Creature> GetOccupants ( ) =>
+      Entries.Select ( x => x.GetOccupant ( ) );
+
+
+    public bool TryGetFreeSeat ( VehicleSeatType type , out VehicleSeat result )
     {
-      var id = (byte) _seats.Count;
-      _seats.Add ( new VehicleSeat ( id, type ) );
+      var freeSeat = GetFreeSeat ( type );
 
-      return id;
-    }
-
-    public void Kick ( Creature creature ) => creature.LeaveVehicle ( );
-
-    public void KickMany ( IEnumerable <Creature> creatures )
-    {
-      foreach ( var creature in creatures )
+      if ( freeSeat == null )
       {
-        Kick ( creature );
+        result = null;
+        return false;
       }
+
+      result = freeSeat;
+      return true;
     }
 
-    public void KickAll ( )
+    public bool TryGetFreeSeat ( out VehicleSeat result )
     {
-      foreach ( var seat in _seats.Where ( x => x.IsOccupied ) )
+      var freeSeat = GetFreeSeat ( );
+
+      if ( freeSeat == null )
       {
-        seat.GetOccupant ( ).LeaveVehicle ( );
+        result = null;
+        return false;
       }
+
+      result = freeSeat;
+      return true;
     }
-
-    public VehicleSeat FindUsedSeat ( Creature creature ) => _seats
-     .FirstOrDefault ( x => x.GetOccupant ( ).Id == creature.Id );
-
-    public VehicleSeat FindFreeSeat ( VehicleSeatType type ) => _seats
-     .FirstOrDefault ( x => x.Type == type && !x.IsOccupied );
-
-    public VehicleSeat FindFreeSeat ( ) => _seats
-     .FirstOrDefault ( x => !x.IsOccupied );
-
-    public bool HasUsedSeat ( Creature creature ) => _seats
-     .Any ( x => x.GetOccupant ( ).Id.Equals ( creature.Id ) );
-
-    public bool HasFreeSeat ( VehicleSeatType type ) => _seats
-     .Any ( x => x.Type == type && !x.IsOccupied );
-
-    public bool HasFreeSeat ( ) => _seats
-     .Any ( x => !x.IsOccupied );
-
-    public byte CreateDriverSeat ( ) => CreateSeat ( VehicleSeatType.Driver );
-    public byte CreatePassengerSeat ( ) => CreateSeat ( VehicleSeatType.Passenger );
-
-    public VehicleSeat GetDriverSeat ( int index ) => GetDriverSeats ( ) [ index ];
-    public VehicleSeat GetPassengerSeat ( int index ) => GetPassengerSeats ( ) [ index ];
-
-    public VehicleSeat Get ( byte seatId ) => _seats
-     .FirstOrDefault ( x => x.Id == seatId );
-
-    public IReadOnlyList <VehicleSeat> GetDriverSeats ( ) => _seats
-     .Where ( x => x.Type == VehicleSeatType.Driver )
-     .OrderBy ( x => x.Id )
-     .ToList ( );
-
-    public IReadOnlyList <VehicleSeat> GetPassengerSeats ( ) => _seats
-     .Where ( x => x.Type == VehicleSeatType.Passenger )
-     .OrderBy ( x => x.Id )
-     .ToList ( );
   }
 }

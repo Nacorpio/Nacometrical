@@ -65,6 +65,11 @@ namespace Nacometrical
     }
 
 
+    IEnumerator <IVehiclePart> IEnumerable <IVehiclePart>.GetEnumerator ( )
+    {
+      return GetEnumerator ( );
+    }
+
     public IEnumerator <TPart> GetEnumerator ( )
     {
       return Entries.GetEnumerator ( );

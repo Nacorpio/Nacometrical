@@ -1,5 +1,7 @@
-﻿namespace Nacometrical
+﻿using System.Collections.Generic;
+
+namespace Nacometrical
 {
-  public interface IVehiclePartMap
+  public interface IVehiclePartMap : IEnumerable <IVehiclePart>
   { }
 }
