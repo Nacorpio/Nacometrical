@@ -2,8 +2,7 @@
 {
   public partial class VehicleDoor : VehiclePart , IOpenable
   {
-    public VehicleDoor ( byte id ) : base ( id )
-    { }
+    public VehicleWindow AttachedWindow { get; private set; }
 
     public bool IsOpen { get; private set; }
     public bool IsLocked { get; private set; }
@@ -13,15 +12,16 @@
 
     public bool HasAttachedWindow => AttachedWindow != null;
 
-    public VehicleWindow AttachedWindow { get; private set; }
+    public VehicleDoor ( byte id ) : base ( id )
+    { }
+
+    public void FixWindow ( ) => AttachedWindow?.Break ( );
+    public void BreakWindow ( ) => AttachedWindow?.Break ( );
 
     internal void SetAttachedWindow ( VehicleWindow window )
     {
       AttachedWindow = window;
     }
-
-    public void FixWindow ( ) => AttachedWindow?.Break ( );
-    public void BreakWindow ( ) => AttachedWindow?.Break ( );
 
     public void Open ( )
     {

@@ -19,7 +19,8 @@ namespace Nacometrical
     }
   }
 
-  public partial class VehiclePartMap <TPart , TPartBuilder> : IEnumerable <TPart>
+  public partial class VehiclePartMap <TPart , TPartBuilder>
+    : IMutableVehiclePartMap <TPart , TPartBuilder> , IEnumerable <TPart>
     where TPart : VehiclePart
     where TPartBuilder : VehiclePartBuilder <TPartBuilder , TPart> , new ( )
   {
@@ -44,7 +45,7 @@ namespace Nacometrical
       }
     }
 
-    public TPart _CreatePart ( Action <byte , TPartBuilder> buildFunc , TPartBuilder pb )
+    private TPart _CreatePart ( Action <byte , TPartBuilder> buildFunc , TPartBuilder pb )
     {
       var id = (byte) Entries.Count;
       buildFunc ( id , pb );
