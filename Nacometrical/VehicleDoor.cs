@@ -1,0 +1,109 @@
+﻿namespace Nacometrical
+{
+  public partial class VehicleDoor : VehiclePart , IOpenable
+  {
+    public VehicleDoor ( byte id ) : base ( id )
+    { }
+
+    public bool IsOpen { get; private set; }
+    public bool IsLocked { get; private set; }
+
+    public bool IsClosed => !IsOpen;
+    public bool IsUnlocked => !IsLocked;
+
+    public bool HasAttachedWindow => AttachedWindow != null;
+
+    public VehicleWindow AttachedWindow { get; private set; }
+
+    internal void SetAttachedWindow ( VehicleWindow window )
+    {
+      AttachedWindow = window;
+    }
+
+    public void FixWindow ( ) => AttachedWindow?.Break ( );
+    public void BreakWindow ( ) => AttachedWindow?.Break ( );
+
+    public void Open ( )
+    {
+      if ( IsOpen || IsLocked )
+      {
+        return;
+      }
+
+      IsOpen = true;
+    }
+
+    public void Close ( )
+    {
+      if ( IsClosed )
+      {
+        return;
+      }
+
+      IsOpen = false;
+    }
+
+    public void Lock ( )
+    {
+      if ( IsLocked )
+      {
+        return;
+      }
+
+      IsLocked = true;
+    }
+
+    public void Unlock ( )
+    {
+      if ( !IsLocked )
+      {
+        return;
+      }
+
+      IsLocked = false;
+    }
+  }
+
+  public partial class VehicleDoor
+  {
+    public bool TryUnlockAndOpen ( ) =>
+      TryUnlock ( ) &&
+      TryOpen ( );
+
+    public bool TryCloseAndLock ( ) =>
+      TryClose ( ) &&
+      TryLock ( );
+
+    public bool TryOpen ( )
+    {
+      if ( IsOpen ) return false;
+
+      Open ( );
+      return true;
+    }
+
+    public bool TryClose ( )
+    {
+      if ( IsClosed ) return false;
+
+      Close ( );
+      return false;
+    }
+
+    public bool TryLock ( )
+    {
+      if ( IsLocked ) return false;
+
+      Lock ( );
+      return true;
+    }
+
+    public bool TryUnlock ( )
+    {
+      if ( IsUnlocked ) return false;
+
+      Unlock ( );
+      return true;
+    }
+  }
+}
